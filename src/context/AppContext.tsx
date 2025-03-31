@@ -1,9 +1,7 @@
-import noop from "lodash/noop";
+import { noop } from "lodash";
 import {
   createContext,
-  Dispatch,
   ReactNode,
-  SetStateAction,
   useContext,
   useMemo,
   useState,
@@ -15,10 +13,17 @@ export interface Message {
   content: string;
 }
 
+export interface ModelOption {
+  key: string;
+  label: string;
+}
+
 export interface AppState {
   messages: Message[];
   isLoading: boolean;
   error: string | null;
+  selectedModel: string;
+  modelOptions: ModelOption[];
 }
 
 export interface AppContextProps extends AppState {
@@ -27,6 +32,7 @@ export interface AppContextProps extends AppState {
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
   clearMessages: () => void;
+  setSelectedModel: (model: string) => void;
 }
 
 const fallbackSetter = import.meta.env.DEV
@@ -35,15 +41,37 @@ const fallbackSetter = import.meta.env.DEV
     }
   : noop;
 
+const MODEL_OPTIONS: ModelOption[] = [
+  {
+    key: "google/gemini-2.5-pro-exp-03-25:free",
+    label: "Google Gemini 2.5 Pro"
+  },
+  {
+    key: "google/gemini-2.0-flash-exp:free",
+    label: "Google Gemini 2.0 Flash"
+  },
+  {
+    key: "openai/chatgpt-4o-latest",
+    label: "ChatGPT 4o"
+  },
+  {
+    key: "openai/gpt-4o-mini",
+    label: "ChatGPT 4o mini"
+  }
+];
+
 export const AppContext = createContext<AppContextProps>({
   messages: [],
   isLoading: false,
   error: null,
+  selectedModel: MODEL_OPTIONS[0].key,
+  modelOptions: MODEL_OPTIONS,
   addMessage: fallbackSetter,
   streamToLatestMessage: fallbackSetter,
   setLoading: fallbackSetter,
   setError: fallbackSetter,
   clearMessages: fallbackSetter,
+  setSelectedModel: fallbackSetter,
 });
 
 export const useAppContext = () => {
@@ -58,6 +86,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState<string>(MODEL_OPTIONS[0].key);
 
   const addMessage = (message: Message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -85,13 +114,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       messages,
       isLoading,
       error,
+      selectedModel,
+      modelOptions: MODEL_OPTIONS,
       addMessage,
       streamToLatestMessage,
       setLoading,
       setError,
       clearMessages,
+      setSelectedModel,
     }),
-    [messages, isLoading, error, addMessage, streamToLatestMessage, setLoading, setError, clearMessages]
+    [messages, isLoading, error, selectedModel, addMessage, streamToLatestMessage, setLoading, setError, clearMessages]
   );
 
   return (

@@ -9,9 +9,12 @@ interface OpenRouterResponse {
   }[];
 }
 
+const FALLBACK_MODEL = "google/gemini-2.5-pro-exp-03-25:free";
+
 export const callOpenRouterAPI = async (
   prompt: string,
   apiKey: string,
+  model: string,
   onChunk: (content: string) => void,
   onComplete: () => void,
   onError: (error: string) => void
@@ -29,7 +32,7 @@ export const callOpenRouterAPI = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "mistralai/Mistral-7B-Instruct-v0.1",
+        model: model || FALLBACK_MODEL,
         messages: [{ role: "user", content: prompt }],
         stream: true,
       }),

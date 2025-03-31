@@ -4,7 +4,7 @@ import { callOpenRouterAPI } from "../services/api";
 
 const InputArea = () => {
   const [input, setInput] = useState("");
-  const { addMessage, streamToLatestMessage, setLoading, setError, isLoading } = useAppContext();
+  const { addMessage, streamToLatestMessage, setLoading, setError, isLoading, selectedModel } = useAppContext();
 
   const handleSend = async (prefix: string = "") => {
     if (isLoading) return;
@@ -27,13 +27,14 @@ const InputArea = () => {
       await callOpenRouterAPI(
         prompt,
         apiKey,
-        (content) => {
+        selectedModel,
+        (content: string) => {
           streamToLatestMessage(content);
         },
         () => {
           setLoading(false);
         },
-        (error) => {
+        (error: string) => {
           setError(error);
           setLoading(false);
         }
