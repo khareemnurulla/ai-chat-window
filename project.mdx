@@ -1,0 +1,95 @@
+# Local LLM Shortcut Project
+
+## Project Overview
+
+This project is a desktop application designed to simplify complex sentences using local LLM (Large Language Model) technology. The application provides a user-friendly chat interface for text simplification tasks.
+
+## Technology Stack
+
+### Frontend
+- **React** (v18.3.1) - Core UI framework
+- **TypeScript** (v5.6.2) - Type-safe JavaScript
+- **Vite** (v6.0.3) - Build tool and development server
+- **TailwindCSS** (v3.4.17) - Utility-first CSS framework
+- **React Context** - State management
+
+### Backend
+- **Tauri** (v2) - Desktop application framework
+- **Rust** - Systems programming language
+  - `tauri-plugin-opener` - File system interactions
+  - `serde` - Serialization/deserialization
+  - `serde_json` - JSON handling
+
+## Project Structure
+
+```
+local-llm-shortcut/
+├── ai-chat-window/           # Main application directory
+│   ├── src/                  # Frontend source code
+│   │   ├── components/       # React components
+│   │   │   ├── InputArea.tsx
+│   │   │   └── MessageThread.tsx
+│   │   ├── context/         # React context
+│   │   │   └── AppContext.tsx
+│   │   ├── services/        # API services
+│   │   │   └── api.ts
+│   │   ├── App.tsx          # Main React component
+│   │   └── main.tsx         # Application entry point
+│   │
+│   ├── src-tauri/           # Rust backend code
+│   │   ├── src/             # Rust source code
+│   │   │   └── lib.rs       # Rust library code
+│   │   ├── Cargo.toml       # Rust dependencies
+│   │   └── capabilities/    # Tauri capabilities config
+│   │
+│   ├── public/              # Static assets
+│   └── package.json         # Node.js dependencies
+```
+
+## Key Features
+
+- Desktop application with native performance
+- Chat-style interface for text simplification
+- Local LLM processing for privacy and speed
+- Cross-platform compatibility (Windows, macOS, Linux)
+
+## Development
+
+### Prerequisites
+- Node.js and npm
+- Rust toolchain
+- Tauri CLI
+
+### Setup
+1. Install frontend dependencies:
+   ```bash
+   cd ai-chat-window
+   npm install
+   ```
+
+2. Install Rust dependencies:
+   ```bash
+   cd src-tauri
+   cargo build
+   ```
+
+### Development Commands
+- `npm run tauri dev` - Start development server
+- `npm run build` - Build production frontend
+- `npm run preview` - Preview production build
+
+## Architecture
+
+The application follows a hybrid architecture:
+- Frontend: React-based UI with TypeScript for type safety
+- Backend: Rust-powered Tauri for native performance and system access
+- Communication: IPC (Inter-Process Communication) between frontend and backend
+
+## Build and Deployment
+
+The application can be built for multiple platforms using Tauri's build system:
+```bash
+npm run tauri build
+```
+
+This will generate platform-specific installers in the `src-tauri/target/release` directory.

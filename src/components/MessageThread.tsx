@@ -14,17 +14,23 @@ const MessageThread = () => {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4">
-      {messages.map((message) => (
-        <div
-          key={message.id}
-          className={`mb-2 rounded-lg py-2 px-3 shadow-md ${message.role === "user" ? "bg-blue-100 text-blue-800 ml-auto w-fit" : "bg-gray-100 text-gray-800 mr-auto w-fit"}`}
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {message.content}
-        </div>
-      ))}
-      <div ref={messagesEndRef} />
+    <div className="absolute inset-0 overflow-y-auto px-4 pt-4 pb-40 space-y-4">
+      <div className="max-w-4xl mx-auto">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex mb-4 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`max-w-[70%] rounded-2xl py-2 px-4 ${message.role === "user" ? "bg-blue-500 text-white rounded-br-md" : "bg-gray-200 text-gray-800 rounded-bl-md"}`}
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {message.content}
+            </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} className="h-1" />
+      </div>
     </div>
   );
 };
